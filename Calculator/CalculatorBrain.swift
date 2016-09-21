@@ -44,7 +44,7 @@ class CalculatorBrain {
     
     func setOperand(operand: Double) {
         accumulator = operand
-        descriptionAccumulator = String(format: "%g", accumulator)
+        descriptionAccumulator = formatter.string(for: accumulator) ?? ""
     }
     
     //Словарь с всевозможным набором команд для разных кнопок
@@ -83,7 +83,6 @@ class CalculatorBrain {
         case Equals
         case C
     }
-
     
     //Тут выполняются все вычисления(Определяется тип задачи(Binary, Unary, Constant, Equals))
     func performOperation(symbol: String){
@@ -113,30 +112,50 @@ class CalculatorBrain {
             }
         }
     }
-
-            
-            private func executeBinaryOperation(){
-                if pending != nil{
-                    accumulator = pending!.binaryOperation(pending!.firstOperand, accumulator)
-                    descriptionAccumulator = pending!.descriptionFunction(pending!.descriptionOperand, descriptionAccumulator)
-                    pending = nil
-                }
-            }
-            
-            
-            private func clear() {
-                accumulator = 0.0
-                pending = nil
-                descriptionAccumulator = " "
-                currentPrecedence = Int.max
-            }
-            
-            private var pending: PendingBinaryOperationInfo?
-            
-            private struct PendingBinaryOperationInfo {
-                var binaryOperation: (Double, Double) ->Double
-                var firstOperand: Double
-                var descriptionFunction: (String, String) -> String
-                var descriptionOperand: String
-            }
+    
+    
+    private func executeBinaryOperation(){
+        
+        if pending != nil{
+            accumulator = pending!.binaryOperation(pending!.firstOperand, accumulator)
+            descriptionAccumulator = pending!.descriptionFunction(pending!.descriptionOperand, descriptionAccumulator)
+            pending = nil
+        }
+    }
+    
+    
+    private func clear() {
+        accumulator = 0.0
+        pending = nil
+        descriptionAccumulator = " "
+        currentPrecedence = Int.max
+    }
+    
+    private var pending: PendingBinaryOperationInfo?
+    
+    private struct PendingBinaryOperationInfo {
+        var binaryOperation: (Double, Double) ->Double
+        var firstOperand: Double
+        var descriptionFunction: (String, String) -> String
+        var descriptionOperand: String
+    }
 }
+class CalculatorFormatter: NumberFormatter {
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override init() {
+        super.init()
+        self.locale = NSLocale.current
+        self.numberStyle = .decimal
+        self.maximumFractionDigits = 6
+        self.notANumberSymbol = "Error"
+        self.groupingSeparator = " "
+        
+    }
+}
+
+let formatter = CalculatorFormatter()
+

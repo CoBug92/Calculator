@@ -21,23 +21,25 @@ class ViewController: UIViewController{
     
     //MARK: Value
     private var userIsInTheMiddleOfTyping = false
-    let decimalSeparator = NumberFormatter().decimalSeparator ?? "."
+    let decimalSeparator = formatter.decimalSeparator ?? "."
     private var brain = CalculatorBrain()
     private var displayValue: Double? {
         get {
-            if let displayText = display.text {
-                return NumberFormatter().number(from: displayText)?.doubleValue
+            if let text = display.text,
+                let value = formatter.number(from:text)?.doubleValue {
+                return value
             }
             return nil
         }
         set {
-            if (newValue != nil) {
-                display.text = NumberFormatter().string(for: newValue!)
+            if let value = newValue {
+                display.text = formatter.string(for: value)
+                history.text = brain.description + (brain.isPartialResult ? " …" : " =")
             } else {
                 display.text = " "
-                history.text =  history.text! + " Error"
+                history.text = " "
+                userIsInTheMiddleOfTyping = false
             }
-            userIsInTheMiddleOfTyping = false
         }
     }
     
@@ -55,6 +57,7 @@ class ViewController: UIViewController{
         }
         displayValue = brain.result
     }
+    
     @IBAction private func touchDigit(sender: UIButton){
         let digit = sender.currentTitle!
         if userIsInTheMiddleOfTyping {
