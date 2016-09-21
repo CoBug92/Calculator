@@ -64,7 +64,7 @@ class CalculatorBrain {
         "√": Operation.UnaryOperation(sqrt,{"√(" + $0 + ")"}),
         "x²": Operation.UnaryOperation({pow($0,2)}, {"(" + $0 + ")²"}),
         "xʸ": Operation.BinaryOperation({pow($0,$1)}, {"(" + $0 + ")^" + $1 },2),
-        "log": Operation.UnaryOperation(log, {"ln(" + $0 + ")"}),
+        "ln": Operation.UnaryOperation(log, {"ln(" + $0 + ")"}),
         "rand": Operation.NullaryOperation(drand48, "rand()"),
         //Тригонометрические операции
         "cos": Operation.UnaryOperation(cos, {"cos(" + $0 + ")"}),
