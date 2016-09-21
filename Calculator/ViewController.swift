@@ -12,32 +12,35 @@ class ViewController: UIViewController{
     //Mark: Properties
     @IBOutlet private weak var display: UILabel!
     @IBOutlet weak var history: UILabel!
+    @IBOutlet weak var point: UIButton!{
+        didSet {
+            point.setTitle(decimalSeparator, for: UIControlState.normal)
+        }
+    }
     
     
     //MARK: Value
     private var userIsInTheMiddleOfTyping = false
+    let decimalSeparator = NumberFormatter().decimalSeparator ?? "."
     private var brain = CalculatorBrain()
     private var displayValue: Double? {
         get {
-            if let text = display.text,
-                let value = NumberFormatter().number(from: text)?.doubleValue {
-                return value
+            if let displayText = display.text {
+                return NumberFormatter().number(from: displayText)?.doubleValue
             }
             return nil
         }
         set {
-            if let value = newValue {
-                display.text = NumberFormatter().string(from: NSNumber(value))
-                history.text = brain.description + (brain.isPartialResult ? " …" : " =")
+            if (newValue != nil) {
+                display.text = NumberFormatter().string(for: newValue!)
             } else {
                 display.text = " "
-                history.text = " "
-                userIsInTheMiddleOfTyping = false
+                history.text =  history.text! + " Error"
             }
+            userIsInTheMiddleOfTyping = false
         }
     }
     
-
     
     //Mark: Actions
     @IBAction private func performOperation(sender: UIButton) {
@@ -52,17 +55,17 @@ class ViewController: UIViewController{
         }
         displayValue = brain.result
     }
-    @IBAction private func touchDigit(sender: UIButton) {
+    @IBAction private func touchDigit(sender: UIButton){
         let digit = sender.currentTitle!
         if userIsInTheMiddleOfTyping {
             let textCurrentlyInDisplay = display.text!
             //----- Уничтожаем лидирующие нули -----------------
             if (digit == "0") && ((display.text == "0") || (display.text == "-0")){ return }
-            if (digit !=  ".") && ((display.text == "0") || (display.text == "-0"))
+            if (digit !=  decimalSeparator) && ((display.text == "0") || (display.text == "-0"))
             { display.text = digit ; return }
             //--------------------------------------------------
             
-            if (digit != ".") || (textCurrentlyInDisplay.range(of: ".") == nil) {
+            if (digit != decimalSeparator) || (textCurrentlyInDisplay.range(of: decimalSeparator) == nil) {
                 display.text = textCurrentlyInDisplay + digit
             }
         } else {

@@ -334,7 +334,7 @@
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dlX-nc-mhG">
                                                         <color key="backgroundColor" red="0.96389389038085938" green="0.95556163214754863" blue="0.92188652118156666" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
-                                                        <state key="normal" title="."/>
+                                                        <state key="normal" title=".PO"/>
                                                         <connections>
                                                             <action selector="touchDigitWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mrx-p9-jWX"/>
                                                         </connections>
@@ -381,6 +381,7 @@
                     <connections>
                         <outlet property="display" destination="R4w-De-gZj" id="m4l-OQ-j1k"/>
                         <outlet property="history" destination="3yn-Hw-2Du" id="Nh5-9z-6F5"/>
+                        <outlet property="point" destination="dlX-nc-mhG" id="R1x-ch-Bar"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
