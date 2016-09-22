@@ -14,13 +14,13 @@ class ViewController: UIViewController{
     @IBOutlet weak var history: UILabel!
     @IBOutlet weak var point: UIButton!{
         didSet {
-            point.setTitle(decimalSeparator, for: UIControlState.normal)
+            point.setTitle(decimalSeparator, for: UIControlState())
         }
     }
     
     
     //MARK: Value
-    private var userIsInTheMiddleOfTyping = false
+    fileprivate var userIsInTheMiddleOfTyping = false
     let decimalSeparator = formatter.decimalSeparator ?? "."
     private var brain = CalculatorBrain()
     private var displayValue: Double? {
@@ -36,7 +36,7 @@ class ViewController: UIViewController{
                 display.text = formatter.string(for: value)
                 history.text = brain.description + (brain.isPartialResult ? " …" : " =")
             } else {
-                display.text = " "
+                display.text = "0"
                 history.text = " "
                 userIsInTheMiddleOfTyping = false
             }
@@ -86,7 +86,6 @@ class ViewController: UIViewController{
             displayValue = brain.result
         }
     }
-    
     @IBAction func plusMinus(_ sender: UIButton) {
         if userIsInTheMiddleOfTyping  {
             if (display.text!.range(of: "-") != nil) {

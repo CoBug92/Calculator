@@ -11,6 +11,7 @@ import Foundation
 
 class CalculatorBrain {
     private var accumulator = 0.0
+    private var internalProgram = [AnyObject]()
     var result: Double{
         get{
             return accumulator
@@ -45,6 +46,7 @@ class CalculatorBrain {
     func setOperand(operand: Double) {
         accumulator = operand
         descriptionAccumulator = formatter.string(for: accumulator) ?? ""
+        internalProgram.append(operand as AnyObject)
     }
     
     //Словарь с всевозможным набором команд для разных кнопок
@@ -52,7 +54,7 @@ class CalculatorBrain {
         //Простейшие математические операции
         "±": Operation.UnaryOperation({-$0}, {"-" + $0}),
         "%": Operation.UnaryOperation({$0*0.01}, {$0 + "*100%"}),
-        "-": Operation.BinaryOperation({$0-$1}, {$0 + "-" + $1}, 0), //(op1: Double, op2: Double)->Double) in return op1-op2
+        "-": Operation.BinaryOperation({$0-$1}, {$0 + "-" + $1}, 0), //Полная запись (op1: Double, op2: Double)->Double) in return op1-op2
         "+": Operation.BinaryOperation({$0+$1}, {$0 + "+" + $1}, 0),
         "×": Operation.BinaryOperation({$0*$1}, {$0 + "×" + $1}, 1),
         "÷": Operation.BinaryOperation({$0/$1}, {$0 + "÷" + $1}, 1),
@@ -84,6 +86,7 @@ class CalculatorBrain {
     
     //Тут выполняются все вычисления(Определяется тип задачи(Binary, Unary, Constant, Equals))
     func performOperation(symbol: String){
+        internalProgram.append(symbol as AnyObject)
         if let operation = operations[symbol]{
             switch operation {
             case .NullaryOperation(let function, let descriptionValue):
@@ -105,13 +108,13 @@ class CalculatorBrain {
                                                      descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator)
             case .Equals:
                 executeBinaryOperation()
+                
             }
         }
     }
     
     
     private func executeBinaryOperation(){
-        
         if pending != nil{
             accumulator = pending!.binaryOperation(pending!.firstOperand, accumulator)
             descriptionAccumulator = pending!.descriptionFunction(pending!.descriptionOperand, descriptionAccumulator)
@@ -119,6 +122,26 @@ class CalculatorBrain {
         }
     }
     
+    typealias PropertyList = AnyObject
+    
+    var program: PropertyList {
+        get {
+            return internalProgram as CalculatorBrain.PropertyList
+        }
+        set {
+            clear()
+            if let arrayOfOps = newValue as? [AnyObject] {
+                for op in arrayOfOps {
+                    if let operand = op as? Double {
+                        setOperand(operand: operand)
+                    } else if let operation = op as? String {
+                        performOperation(symbol: operation)
+                    }
+                }
+            }
+        }
+    }
+
     
     func clear() {
         accumulator = 0.0
@@ -136,22 +159,13 @@ class CalculatorBrain {
         var descriptionOperand: String
     }
 }
-class CalculatorFormatter: NumberFormatter {
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override init() {
-        super.init()
-        self.locale = NSLocale.current
-        self.numberStyle = .decimal
-        self.maximumFractionDigits = 6
-        self.notANumberSymbol = "Error"
-        self.groupingSeparator = " "
-        
-    }
-}
 
-let formatter = CalculatorFormatter()
-
+let formatter:NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.maximumFractionDigits = 6
+    formatter.notANumberSymbol = "Error"
+    formatter.groupingSeparator = " "
+    formatter.locale = NSLocale.current
+    return formatter
+} ()
