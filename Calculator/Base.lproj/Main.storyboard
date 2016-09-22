@@ -42,7 +42,7 @@
                                                         <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <state key="normal" title="C"/>
                                                         <connections>
-                                                            <action selector="performOperationWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vGK-ys-ABT"/>
+                                                            <action selector="ClearAll:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Doa-Xx-IYr"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Urf-QR-k8F">

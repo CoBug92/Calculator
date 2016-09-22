@@ -98,4 +98,11 @@ class ViewController: UIViewController{
             performOperation(sender: sender)
         }
     }
+    
+    @IBAction func ClearAll(_ sender: UIButton) {
+        brain.clear()
+        displayValue = nil
+    }
+    
+    
 }

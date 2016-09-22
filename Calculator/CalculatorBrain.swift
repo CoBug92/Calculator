@@ -49,7 +49,6 @@ class CalculatorBrain {
     
     //Словарь с всевозможным набором команд для разных кнопок
     private var operations: Dictionary<String, Operation> = [
-        "C": Operation.C,
         //Простейшие математические операции
         "±": Operation.UnaryOperation({-$0}, {"-" + $0}),
         "%": Operation.UnaryOperation({$0*0.01}, {$0 + "*100%"}),
@@ -81,7 +80,6 @@ class CalculatorBrain {
         case UnaryOperation((Double) -> Double,(String) -> String)
         case BinaryOperation((Double, Double) -> Double, (String, String) -> String, Int)
         case Equals
-        case C
     }
     
     //Тут выполняются все вычисления(Определяется тип задачи(Binary, Unary, Constant, Equals))
@@ -107,8 +105,6 @@ class CalculatorBrain {
                                                      descriptionFunction: descriptionFunction, descriptionOperand: descriptionAccumulator)
             case .Equals:
                 executeBinaryOperation()
-            case .C:
-                clear()
             }
         }
     }
@@ -124,7 +120,7 @@ class CalculatorBrain {
     }
     
     
-    private func clear() {
+    func clear() {
         accumulator = 0.0
         pending = nil
         descriptionAccumulator = " "
