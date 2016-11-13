@@ -3,6 +3,7 @@ A basic calculator for iOS, written in Swift 3.
 
 Basic iOS Calculator
 
+![alt text](https://raw.githubusercontent.com/CoBug92/Calculator/master/Image/IMG_2885.PNG)
 
 The goals for this project were simple:
 
